@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-import os, sys
+import os, sys, signal
 
 _dir = os.path.dirname(os.path.abspath(__file__))
 if _dir not in sys.path:
@@ -58,7 +58,11 @@ if __name__ == '__main__':
         if args.cmd == 'start':
             daemon.start()
         elif args.cmd == 'stop':
-            daemon.exit()
+            if os.path.isfile(pid) and os.access(pid, os.R_OK):
+                with open(pid, 'rb') as f:
+                    _pid = int(f.read().strip())
+                    if _pid:
+                        os.kill(_pid, signal.SIGTERM)
     else:
         server()
 
