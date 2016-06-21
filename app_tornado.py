@@ -6,6 +6,7 @@ _dir = os.path.dirname(os.path.abspath(__file__))
 if _dir not in sys.path:
     sys.path.insert(0, _dir)
 
+import logging
 from tornado.httpserver import HTTPServer
 from tornado.wsgi import WSGIContainer
 from tornado.ioloop import IOLoop
@@ -16,6 +17,10 @@ try:
 except ImportError:
     daemonize = None
 
+logger = logging.getLogger(__name__)
+lh = logging.FileHandler(os.path.join(_dir, 'app.log'), 'w')
+lh.setLevel(logging.DEBUG)
+logger.addHandler(lh)
 
 from app import app
 
@@ -26,7 +31,6 @@ config = {
 def server():
     port = config['port']
     print 'serving port: %s' % port
-    return
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(port, address='127.0.0.1')
     IOLoop.instance().start()
