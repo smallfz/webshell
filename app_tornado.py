@@ -49,9 +49,11 @@ if __name__ == '__main__':
     config['port'] = args.port
     if daemonize and sys.platform != 'win32':
         pid = '/var/run/webshell.pid'
+        keep_fds = [lh.stream.fileno()]
         daemon = daemonize.Daemonize(app='webshell',
                                      pid=pid,
                                      logger=logger,
+                                     keep_fds=keep_fds,
                                      action=server)
         if args.cmd == 'start':
             daemon.start()
