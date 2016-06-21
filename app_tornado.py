@@ -49,7 +49,10 @@ if __name__ == '__main__':
     config['port'] = args.port
     if daemonize and sys.platform != 'win32':
         pid = '/var/run/webshell.pid'
-        daemon = daemonize.Daemonize(app='webshell', pid=pid, action=server)
+        daemon = daemonize.Daemonize(app='webshell',
+                                     pid=pid,
+                                     logger=logger,
+                                     action=server)
         if args.cmd == 'start':
             daemon.start()
         elif args.cmd == 'stop':
